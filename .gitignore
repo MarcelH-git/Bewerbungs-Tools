@@ -1,0 +1,4 @@
+anschreiben_template.txt
+*.txt
+__pycache__/
+*.pyc

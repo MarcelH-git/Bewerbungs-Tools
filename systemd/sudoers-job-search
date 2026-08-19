@@ -1,0 +1,9 @@
+# Erlaubt winnetou_kowslovskiwitch und openclaw_user, job_search.py via
+# systemd-run ohne Passwort zu starten. Eng eingegrenzt auf genau diesen
+# einen Befehl (alle systemd-run-Argumente fix). Variable Teile:
+#   --unit=job-search-manual-*   (PID-Suffix vom Wrapper)
+#   ... job_search.py *          (Flags an das Skript)
+Cmnd_Alias JOB_SEARCH_RUN = /usr/bin/systemd-run --pipe --wait --quiet --collect --unit=job-search-manual-* --uid=winnetou_kowslovskiwitch --working-directory=/home/winnetou_kowslovskiwitch/bewerbungs-tools --setenv=HOME=/home/winnetou_kowslovskiwitch --property=LoadCredential=groq_api_key\:/etc/credstore/openclaw_groq_api_key --property=LoadCredential=groq_api_key_secondary\:/etc/credstore/openclaw_groq_api_key_secondary --property=LoadCredential=rapidapi_key\:/etc/credstore/openclaw_rapidapi_key --property=LoadCredential=telegram_bot_token\:/etc/credstore/openclaw_telegram_bot_token --property=LoadCredential=linkedin_li_at\:/etc/credstore/openclaw_linkedin_li_at --property=LoadCredential=linkedin_jsessionid\:/etc/credstore/openclaw_linkedin_jsessionid /usr/bin/python3 /home/winnetou_kowslovskiwitch/bewerbungs-tools/job_search.py *
+
+winnetou_kowslovskiwitch ALL=(root) NOPASSWD: JOB_SEARCH_RUN
+openclaw_user            ALL=(root) NOPASSWD: JOB_SEARCH_RUN

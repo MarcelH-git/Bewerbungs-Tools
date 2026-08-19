@@ -1,0 +1,17 @@
+[Unit]
+Description=Job-Suche (Bewerbungs-Tools)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=winnetou_kowslovskiwitch
+WorkingDirectory=/home/winnetou_kowslovskiwitch/bewerbungs-tools
+ExecStart=/usr/bin/python3 /home/winnetou_kowslovskiwitch/bewerbungs-tools/job_search.py --no-verbose
+LoadCredential=groq_api_key:/etc/credstore/openclaw_groq_api_key
+LoadCredential=groq_api_key_secondary:/etc/credstore/openclaw_groq_api_key_secondary
+LoadCredential=rapidapi_key:/etc/credstore/openclaw_rapidapi_key
+LoadCredential=telegram_bot_token:/etc/credstore/openclaw_telegram_bot_token
+LoadCredential=linkedin_li_at:/etc/credstore/openclaw_linkedin_li_at
+LoadCredential=linkedin_jsessionid:/etc/credstore/openclaw_linkedin_jsessionid
+TimeoutStartSec=30min

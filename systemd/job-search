@@ -1,0 +1,16 @@
+#!/bin/bash
+# Wrapper: führt job_search.py als transienten systemd-Service mit Credstore-Zugriff aus.
+# Alle Argumente werden 1:1 an job_search.py durchgereicht.
+exec sudo /usr/bin/systemd-run \
+  --pipe --wait --quiet --collect \
+  --unit="job-search-manual-$$" \
+  --uid=winnetou_kowslovskiwitch \
+  --working-directory=/home/winnetou_kowslovskiwitch/bewerbungs-tools \
+  --setenv=HOME=/home/winnetou_kowslovskiwitch \
+  --property=LoadCredential=groq_api_key:/etc/credstore/openclaw_groq_api_key \
+  --property=LoadCredential=groq_api_key_secondary:/etc/credstore/openclaw_groq_api_key_secondary \
+  --property=LoadCredential=rapidapi_key:/etc/credstore/openclaw_rapidapi_key \
+  --property=LoadCredential=telegram_bot_token:/etc/credstore/openclaw_telegram_bot_token \
+  --property=LoadCredential=linkedin_li_at:/etc/credstore/openclaw_linkedin_li_at \
+  --property=LoadCredential=linkedin_jsessionid:/etc/credstore/openclaw_linkedin_jsessionid \
+  /usr/bin/python3 /home/winnetou_kowslovskiwitch/bewerbungs-tools/job_search.py "$@"
