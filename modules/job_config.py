@@ -64,6 +64,18 @@ BONUS:
 - Gehalt angegeben
 """
 
+# Kompakte Fassung nur für die Detailbewertung (bewerte_stelle) — die läuft pro
+# Top-Job als eigener Groq-Call, die volle CHECKLISTE ginge dabei bei jedem
+# Call redundant erneut mit. Vorauswahl hat den Grobfilter schon gemacht,
+# hier zählen nur noch K.O.-Harte-Kriterien + Kernpassung für den Score.
+CHECKLISTE_KURZ = """
+Profil: Python/AutoHotkey, KEINE Kenntnisse in Java/SAP/Docker/Angular/React/etc., 5 Jahre Prozessautomatisierung/Bot-Entwicklung/IT-Support, BWL Finance Bachelor.
+K.O. (PUNKTE: 1): nicht Hamburg/Umgebung UND kein Homeoffice/Remote/Hybrid; 3+ Jahre Pflicht-Berufserfahrung; Pflicht-Technologie die der Kandidat nicht kennt.
+Niedrig bewerten: Pre-Sales/Vertrieb, reines Projektmanagement, Reisebereitschaft als Hauptanforderung.
+Positiv: Automatisierung/Digitalisierung/KI, Python willkommen, FinTech/Banking/RegTech/Payment (BWL Finance einschlägig), Lernbereitschaft > Technologie-Spezifik.
+Bonus: Homeoffice/Hybrid, unbefristet, Gehalt angegeben.
+"""
+
 
 def _read_secret(name):
     cred_dir = os.environ.get('CREDENTIALS_DIRECTORY')
@@ -122,6 +134,7 @@ def load_config():
         'HOME_LON': home_lon,
         'PROFIL_PUBLIC': profil_public,
         'CHECKLISTE': CHECKLISTE,
+        'CHECKLISTE_KURZ': CHECKLISTE_KURZ,
         'SUCHEN': SUCHEN,
         'TITEL_AUSSCHLUSS': TITEL_AUSSCHLUSS,
         'BESCHREIBUNG_AUSSCHLUSS': BESCHREIBUNG_AUSSCHLUSS,

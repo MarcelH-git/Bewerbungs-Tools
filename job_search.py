@@ -146,7 +146,17 @@ def _main(versuch=1, max_versuche=1):
                 return True
             sende_telegram('ℹ Keine bewertbaren Stellen heute (nach mehreren Versuchen).', cfg)
             return False
-        notify(f"⚙️ {len(top_jobs)} Stellen ausgewählt — bewerte Details...")
+        # Vorauswahl liefert bis zu 10 Refs PRO Quelle -> bei mehreren aktiven
+        # Quellen leicht 40-70 Jobs. Jeder davon kostet einen eigenen Groq-Call
+        # in der Detailbewertung (samt Checkliste) -> hart auf die ohnehin
+        # angezeigte Menge (Top 8, siehe angezeigte weiter unten) plus Puffer
+        # für zu_schwach/ausgesondert deckeln, statt alles einzeln zu bewerten.
+        MAX_DETAILBEWERTUNG = 20
+        if len(top_jobs) > MAX_DETAILBEWERTUNG:
+            notify(f"⚙️ {len(top_jobs)} Stellen ausgewählt — bewerte Details der besten {MAX_DETAILBEWERTUNG}...")
+            top_jobs = top_jobs[:MAX_DETAILBEWERTUNG]
+        else:
+            notify(f"⚙️ {len(top_jobs)} Stellen ausgewählt — bewerte Details...")
 
         t0 = time.time()
         ausgesondert = set()

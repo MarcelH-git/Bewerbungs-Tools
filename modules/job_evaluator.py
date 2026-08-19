@@ -353,10 +353,13 @@ def vorauswahl_alle_quellen(quellen_mit_slot, cfg, notify=print):
 
 
 def bewerte_stelle(job, beschreibung, cfg, notify=print):
+    # Kompakte Checkliste statt der vollen CHECKLISTE (Vorauswahl hat den
+    # Grobfilter schon gemacht) — spart bei jedem der bis zu MAX_DETAILBEWERTUNG
+    # Detail-Calls pro Lauf denselben, unveränderten Text erneut zu senden.
     prompt = f"""Bewerte diese Stelle für einen Berufseinsteiger.
 
 Checkliste:
-{cfg['CHECKLISTE']}
+{cfg.get('CHECKLISTE_KURZ', cfg['CHECKLISTE'])}
 
 Punkteskala — sei streng:
 1-3: K.O. Kriterien nicht erfüllt
