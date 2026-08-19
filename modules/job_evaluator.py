@@ -2,7 +2,23 @@ import requests
 import re
 import json
 import time
+import os
+from datetime import datetime, timezone
 from math import sqrt, cos, radians
+
+GROQ_TPD_LOG = os.path.expanduser('~/job_search_groq_tpd.json')
+
+
+def _log_tpd_erschoepft():
+    """Merkt sich, wann zuletzt alle Groq-Keys am Tageslimit waren — TPD resettet
+    24h nach dem Zeitpunkt, an dem das Kontingent verbraucht war (kein fester
+    Uhrzeit-Reset), daher reicht ein einzelner Zeitstempel zur Einschätzung."""
+    eintrag = {'zeitpunkt': datetime.now(timezone.utc).isoformat()}
+    try:
+        with open(GROQ_TPD_LOG, 'w') as f:
+            json.dump(eintrag, f)
+    except OSError:
+        pass
 
 
 def _groq_keys(cfg):
@@ -48,6 +64,7 @@ def _groq_post(payload, cfg, max_versuche=4):
                     print(f"⛔ Groq Tageslimit (TPD) auf Key {idx}/{len(keys)} erschöpft — wechsle auf Key {idx+1}/{len(keys)}.")
                     break  # innere Retry-Schleife verlassen, äußere while nimmt neuen Key
                 print(f"⛔ Groq Tageslimit (TPD) auf allen {len(keys)} Key(s) erschöpft — breche Groq-Calls ab.")
+                _log_tpd_erschoepft()
                 return response
             # Wartezeit aus Header oder Fehlertext ziehen, sonst Default.
             wartezeit = None

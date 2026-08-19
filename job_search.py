@@ -213,5 +213,30 @@ def _main(versuch=1, max_versuche=1):
         raise
 
 
+def zeige_groq_status():
+    """--groq-status: seit wann alle Groq-Keys TPD-erschöpft sind und ab wann
+    (24h-Rolling-Window, kein fester Uhrzeit-Reset) der nächste Versuch wieder
+    Chancen hat."""
+    pfad = os.path.expanduser('~/job_search_groq_tpd.json')
+    if not os.path.exists(pfad):
+        print("Kein TPD-Abbruch bisher aufgezeichnet.")
+        return
+    with open(pfad) as f:
+        eintrag = json.load(f)
+    from datetime import datetime, timezone, timedelta
+    zeitpunkt = datetime.fromisoformat(eintrag['zeitpunkt'])
+    reset_ca = zeitpunkt + timedelta(hours=24)
+    jetzt = datetime.now(timezone.utc)
+    print(f"Letzter TPD-Abbruch (alle Keys erschöpft): {zeitpunkt.isoformat()}")
+    if jetzt >= reset_ca:
+        print(f"Reset-Fenster (24h) ist vorbei ({reset_ca.isoformat()}) — sollte wieder frei sein.")
+    else:
+        rest = reset_ca - jetzt
+        print(f"Voraussichtlich wieder frei ab ca. {reset_ca.isoformat()} (in {rest}).")
+
+
 if __name__ == '__main__':
-    main()
+    if '--groq-status' in sys.argv:
+        zeige_groq_status()
+    else:
+        main()

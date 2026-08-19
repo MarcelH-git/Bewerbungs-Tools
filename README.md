@@ -26,6 +26,7 @@ Logic is split into `modules/`:
 Flags:
 - `--no-verbose` — suppresses Telegram status messages (for cron job)
 - `--reset` — clears the list of seen jobs
+- `--groq-status` — shows when the Groq daily token limit (TPD) was last exhausted on all keys, and when it should reset (~24h rolling window)
 
 ### anschreiben_generator.py
 Generates personalised cover letters from job listings.
